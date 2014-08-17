@@ -7,7 +7,6 @@
 #define NOTES  3
 
 int main ( int argc, char *argv[]) {
-    generator gen;
     synth syn;
     int err;
     double buf[POINTS+1];

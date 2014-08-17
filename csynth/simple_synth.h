@@ -1,11 +1,27 @@
 #ifndef __SIMPLE_SYNTH
 #define __SIMPLE_SYNTH
 
+#define INTTIME 
+
+#ifdef INTTIME
+#include <limits.h>
+typedef long syn_time;
+#define TOMORROW LONG_MAX
+#else
+typedef double syn_time;
+#define TOMORROW INFINITY
+#endif
+
+
+typedef double syn_result;
+
 typedef double waveform(double);
+
 typedef struct {
     void *next;
     waveform *wave;
-    double start, stop, pitch, vol;
+    syn_time start, stop;
+    double pitch, vol;
 } generator;
 
 typedef struct {
@@ -15,21 +31,21 @@ typedef struct {
 
 typedef struct {
     gen_pool active, queue;
-    double time, tick, hertz, next_rehash;
+    syn_time time, tick, hertz, next_rehash;
     double vol;
 } synth;
 
-double value ( generator *gen, double t );
+double value ( generator *gen, syn_time t );
 
 int pool_alloc ( gen_pool *pool, int size );
 int pool_free ( gen_pool *pool );
 int add_to_pool ( gen_pool *pool, generator *gen );
 int del_from_pool ( gen_pool *pool, int n );
-int clear_pool ( gen_pool *pool, double t );
-double pool_value ( gen_pool *pool, double t );
-int pool_move_ready (gen_pool *dst, gen_pool *src, double t);
-double pool_sync_time ( gen_pool *ends, gen_pool *starts );
-int synth_setup (synth *S, int size, double tick, double vol);
+int clear_pool ( gen_pool *pool, syn_time t );
+double pool_value ( gen_pool *pool, syn_time t );
+int pool_move_ready (gen_pool *dst, gen_pool *src, syn_time t);
+syn_time pool_sync_time ( gen_pool *ends, gen_pool *starts );
+int synth_setup (synth *S, int size, double hertz, double vol);
 int synth_avail ( synth *S);
 
 int synth_add ( synth *S, generator *gen );

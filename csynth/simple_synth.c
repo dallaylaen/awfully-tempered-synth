@@ -5,7 +5,7 @@
 
 #include "simple_synth.h"
 
-double value ( generator *gen, double t ) {
+double value ( generator *gen, syn_time t ) {
     return gen->vol * gen->wave( gen->pitch * ( t - gen->start ) );
 };
 
@@ -48,7 +48,7 @@ int del_from_pool ( gen_pool *pool, int n ) {
     return 0;
 };
 
-int clear_pool ( gen_pool *pool, double t ) {
+int clear_pool ( gen_pool *pool, syn_time t ) {
     int res;
     int i;
 
@@ -62,7 +62,7 @@ int clear_pool ( gen_pool *pool, double t ) {
     return res;
 };
 
-double pool_value ( gen_pool *pool, double t ){
+double pool_value ( gen_pool *pool, syn_time t ){
     double val = 0;
     int i;
 
@@ -72,7 +72,7 @@ double pool_value ( gen_pool *pool, double t ){
     return val;
 };
 
-int pool_move_ready (gen_pool *dst, gen_pool *src, double t) {
+int pool_move_ready (gen_pool *dst, gen_pool *src, syn_time t) {
     int res = 0;
     int err = 0;
     int i;
@@ -93,8 +93,8 @@ int pool_move_ready (gen_pool *dst, gen_pool *src, double t) {
     return err ? err : res;
 };
 
-double pool_sync_time ( gen_pool *ends, gen_pool *starts ) {
-    double val = INFINITY;
+syn_time pool_sync_time ( gen_pool *ends, gen_pool *starts ) {
+    syn_time val = TOMORROW;
     int i;
 
     for (i = 0; i < ends->used; i++) {
@@ -103,7 +103,7 @@ double pool_sync_time ( gen_pool *ends, gen_pool *starts ) {
     };
     for (i = 0; i < starts->used; i++) {
         if (starts->buf[i].start < val)
-            val = ends->buf[i].start;
+            val = starts->buf[i].start;
     };
 
     return val;
@@ -119,7 +119,7 @@ int synth_setup (synth *S, int size, double hertz, double vol) {
     S->vol  = vol;
     S->tick = 1;
     S->time = 0;
-    S->next_rehash = INFINITY;
+    S->next_rehash = TOMORROW;
     return 0;
 };
 
@@ -157,6 +157,8 @@ int synth_tick (synth *S, double *result) {
     done += clear_pool( &(S->active), S->time );
     done += pool_move_ready ( &(S->active), &(S->queue), S->time );
     S->next_rehash = pool_sync_time( &(S->active), &(S->queue) );
+    if (S->next_rehash < S->time)
+        printf ("Oh bad\n");
 
     return done;
 };
@@ -183,8 +185,8 @@ int synth_read ( synth *S, double *buf, int len ) {
         if (!synth_avail(S))
             break;
 
-        gen.start = buf[0] * S->hertz;
-        gen.stop  = buf[1] * S->hertz;
+        gen.start = (syn_time) (buf[0] * S->hertz);
+        gen.stop  = (syn_time) (buf[1] * S->hertz);
         gen.pitch = buf[2] / S->hertz;
         gen.vol   = buf[3] * S->vol;
 
@@ -203,7 +205,8 @@ int synth_read ( synth *S, double *buf, int len ) {
 
 void debug_generator (FILE *fd, generator *gen) {
     fprintf (fd, "\t\tgen:0x%X(%0.3f[%0.3f,%0.3f])*%0.3f\n", 
-        (unsigned) gen->wave, gen->pitch, gen->start, gen->stop, gen->vol);
+        (unsigned) 0x8048470, gen->pitch, 
+        (double) gen->start, (double) gen->stop, gen->vol);
 };
 
 void debug_pool (FILE *fd, gen_pool *pool) {
@@ -217,7 +220,8 @@ void debug_pool (FILE *fd, gen_pool *pool) {
 
 void debug_synth (FILE *fd, synth *S) {
     fprintf (fd, "synth: %0.3f+=%0.3f (rehash at %0.3f):\n", 
-            S->time, S->tick, S->next_rehash);
+            (double) S->time, (double) S->tick, 
+            (double) (S->next_rehash == TOMORROW ? 1E18: S->next_rehash) );
     debug_pool (fd, &( S->active ));
     debug_pool (fd, &( S->queue ));
 };
