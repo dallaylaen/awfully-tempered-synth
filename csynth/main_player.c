@@ -10,7 +10,7 @@ typedef struct {
     int flags;
     double *value;
 } double_opt;
-#define DOPT_OPTINAL  0
+#define DOPT_OPTIONAL  0
 #define DOPT_REQUIRED 1
 #define DOPT_HASARG   2
 int double_parse (double_opt *conf, char **argv);
@@ -25,6 +25,10 @@ int main (int argc, char **argv) {
     double hertz = 44100;
     int err = argc;
     int eof = 0;
+    double debug = 0;
+    double play = 0;
+    FILE *output = stdout;
+    char cmdbuf[1024];
 
     char inbuf[INBUF];
     syn_result outbuf[OUTBUF];
@@ -33,6 +37,8 @@ int main (int argc, char **argv) {
         { "-s", DOPT_HASARG, &size },
         { "-h", DOPT_HASARG, &hertz },
         { "-v", DOPT_HASARG, &vol },
+        { "-d", DOPT_OPTIONAL, &debug },
+        { "-p", DOPT_OPTIONAL, &play },
         { NULL, 0, NULL }
     };
 
@@ -43,8 +49,17 @@ int main (int argc, char **argv) {
     };
 
     synth_setup( &syn, (int) size, hertz, 2*1000*1000*1000 * vol);
-    debug_synth( stderr, &syn );
+    if (debug) debug_synth( stderr, &syn );
 
+    if (play) {
+        snprintf( cmdbuf, 1024, "play -t raw -e signed -b 32 -c 1 -r %0.0f -", 
+            (double) syn.hertz);
+        output = popen ( cmdbuf, "w" );
+        if (output == NULL) {
+            fprintf( stderr, "Failed to open play(1)\n" );
+            return 5;
+        };
+    };
     
     do {
         while (!eof && synth_avail( &syn ) ) {
@@ -58,17 +73,21 @@ int main (int argc, char **argv) {
             };
         };
 
-        debug_synth( stderr, &syn );
-
         err = synth_run( &syn, outbuf, OUTBUF );
         if (err < 0) {
             fprintf( stderr, "Synth fail.\n" );
             return 3;
         };
 
-        write( 1, outbuf, err*sizeof(syn_result) );
-        debug_synth( stderr, &syn );
+        if (debug) debug_synth( stderr, &syn );
+
+        if (fwrite( outbuf, sizeof(syn_result), err, output ) != (unsigned) err) {
+            fprintf( stderr, "Error writing to file\n" );
+            return -6;
+        };
     } while (!eof || !synth_empty( &syn )); /* end main loop */
+
+    pclose( output );
 
     return 0;
 };
