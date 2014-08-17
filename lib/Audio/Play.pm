@@ -17,7 +17,7 @@ sub raw_player {
 sub add_sound {
     my ($self, %opt) = @_;
 
-    warn join ",", keys %opt;
+    # warn join ",", keys %opt;
 
     push @{ $self->sounds }, Audio::Play::Sound->new( %opt );
 };
@@ -36,20 +36,28 @@ sub get_sounds {
     return $last, @$snd;
 };
 
-sub run {
-    my $self = shift;
+
+sub pipe_sound {
+    my ($self, $fd) = @_;
 
     my @snd = sort { $a->start <=> $b->start } @{ $self->sounds };
 
-    @snd = map { $_, $_->harmonic( 2=>-6, 3=>-12, 4=>-18, 5=>-24, 6=>-30) } @snd;
+    @snd = map { $_, $_->harmonic( 0.5 => -6, 2=>-6, 3=>-12, 4=>-18, 5=>-24, 6=>-30) } @snd;
     
-    my $pid = open ( my $fd, "|-", $self->raw_player );
-    die "Popen failed: $!" unless $pid;
-
     foreach (@snd) {
         printf $fd "%0.18f %0.18f %0.18f %0.18f\n", 
             $_->start, $_->len, $_->pitch, $_->voltage;
     };
+    
+};
+
+sub run {
+    my $self = shift;
+
+    my $pid = open ( my $fd, "|-", $self->raw_player );
+    die "Popen failed: $!" unless $pid;
+
+    $self->pipe_sound($fd);
     close ($fd);
 
     waitpid( $pid, 0 );
