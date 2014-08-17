@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "simple_synth.h"
 
@@ -14,6 +15,8 @@ typedef struct {
 #define DOPT_HASARG   2
 int double_parse (double_opt *conf, char **argv);
 
+#define INBUF 4096
+#define OUTBUF 4096
 
 int main (int argc, char **argv) {
     synth syn;
@@ -21,6 +24,9 @@ int main (int argc, char **argv) {
     double size = 256;
     double hertz = 44100;
     int err = argc;
+
+    char inbuf[INBUF];
+    syn_result outbuf[OUTBUF];
 
     double_opt options[] = {
         { "-s", DOPT_HASARG, &size },
@@ -36,7 +42,27 @@ int main (int argc, char **argv) {
     };
 
     synth_setup( &syn, (int) size, hertz, 2*1000*1000*1000 * vol);
-    debug_synth( stdout, &syn );
+    debug_synth( stderr, &syn );
+
+    while (fgets (inbuf, INBUF, stdin) != NULL) {
+        err = synth_scanf( &syn, inbuf );
+        if (err) {
+            fprintf( stderr, "Wrong line (%d): %s\n", err, inbuf);
+        };
+    };
+
+    debug_synth( stderr, &syn );
+
+    while (!synth_empty( &syn )) {
+        err = synth_run( &syn, outbuf, OUTBUF );
+        if (err < 0) {
+            fprintf( stderr, "Synth fail.\n" );
+            return 3;
+        };
+
+        write( 1, outbuf, err*sizeof(syn_result) );
+        debug_synth( stderr, &syn );
+    };
 
     return 0;
 };

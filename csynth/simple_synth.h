@@ -47,9 +47,11 @@ int pool_move_ready (gen_pool *dst, gen_pool *src, syn_time t);
 syn_time pool_sync_time ( gen_pool *ends, gen_pool *starts );
 int synth_setup (synth *S, int size, double hertz, double vol);
 int synth_avail ( synth *S);
+int synth_empty ( synth *S);
 
 int synth_add ( synth *S, generator *gen );
 int synth_read ( synth *S, double *buf, int len );
+int synth_scanf ( synth *S, const char *spec );
 
 int synth_tick (synth *S, syn_result *result);
 int synth_run ( synth *S, syn_result *buf, int len );

@@ -144,6 +144,10 @@ int synth_avail ( synth *S) {
     return S->queue.size - S->queue.used;
 };
 
+int synth_empty ( synth *S) {
+    return !(S->queue.used + S->active.used);
+};
+
 int synth_tick (synth *S, syn_result *result) {
     int done = 0;
 
@@ -201,6 +205,19 @@ int synth_read ( synth *S, double *buf, int len ) {
     };
 
     return ret;
+};
+
+int synth_scanf ( synth *S, const char *spec ) {
+    double buf[4];
+
+    if (4!=sscanf(spec, "%lf%lf%lf%lf", buf, buf+1, buf+2, buf+3)) {
+        return -1;
+    };
+
+    if (buf[0] >= buf[1])
+        return -2;
+
+    return synth_read( S, buf, 4 ) == 1 ? 0 : -4;
 };
 
 void debug_generator (FILE *fd, generator *gen) {
