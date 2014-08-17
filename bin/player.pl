@@ -16,6 +16,7 @@ my %opt;
 
 GetOptions (
     "print" => \$opt{print},
+    "record=s" => \$opt{record},
     "help" => sub { print "usage: $0 [--print] <scorefile> <scorefile> ...\n"; exit 0; },
 ) or die "Bad options, see $0 --help";
 
@@ -34,5 +35,5 @@ while (<>) {
 if ($opt{print}) {
     $play->engine->pipe_sound( \*STDOUT )
 } else {
-    $play->engine->run;
+    $play->engine->run (record => $opt{record});
 };

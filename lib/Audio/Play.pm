@@ -9,7 +9,13 @@ use Audio::Play::Sound;
 has sounds => is => ro => default => sub { [] };
 
 sub raw_player {
-    my $self = shift;
+    my ($self, %opt) = @_;
+
+    if (defined $opt{record}) {
+        return sprintf "%s/%s -r 44100 -v %f | sox -t raw %s -r 44100 - '%s'",
+            $Bin, "../csynth/raw_player", 0.9/$self->max_volume,
+            "-e signed -b 32 -r 44100 -c 1", $opt{record};
+    };
 
     return sprintf "%s/../csynth/raw_player -p -v %f", $Bin, 0.9/$self->max_volume;
 };
@@ -52,9 +58,9 @@ sub pipe_sound {
 };
 
 sub run {
-    my $self = shift;
+    my ($self, %opt) = @_;
 
-    my $pid = open ( my $fd, "|-", $self->raw_player );
+    my $pid = open ( my $fd, "|-", $self->raw_player(%opt) );
     die "Popen failed: $!" unless $pid;
 
     $self->pipe_sound($fd);
