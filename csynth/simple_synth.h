@@ -13,7 +13,7 @@ typedef double syn_time;
 #endif
 
 
-typedef double syn_result;
+typedef long syn_result;
 
 typedef double waveform(double);
 
@@ -51,8 +51,8 @@ int synth_avail ( synth *S);
 int synth_add ( synth *S, generator *gen );
 int synth_read ( synth *S, double *buf, int len );
 
-int synth_tick (synth *S, double *result);
-int synth_run ( synth *S, double *buf, int len );
+int synth_tick (synth *S, syn_result *result);
+int synth_run ( synth *S, syn_result *buf, int len );
 
 void debug_generator (FILE *fd, generator *gen);
 void debug_pool (FILE *fd, gen_pool *pool);

@@ -6,7 +6,7 @@
 #include "simple_synth.h"
 
 double value ( generator *gen, syn_time t ) {
-    return gen->vol * gen->wave( gen->pitch * ( t - gen->start ) );
+    return gen->vol * gen->wave( 2*M_PI*gen->pitch * ( t - gen->start ) );
 };
 
 int pool_alloc ( gen_pool *pool, int size ) {
@@ -144,10 +144,10 @@ int synth_avail ( synth *S) {
     return S->queue.size - S->queue.used;
 };
 
-int synth_tick (synth *S, double *result) {
+int synth_tick (synth *S, syn_result *result) {
     int done = 0;
 
-    *result = pool_value( &(S->active), S->time );
+    *result = (syn_result) pool_value( &(S->active), S->time );
     
     S->time += S->tick;
 
@@ -163,7 +163,7 @@ int synth_tick (synth *S, double *result) {
     return done;
 };
 
-int synth_run ( synth *S, double *buf, int len ) {
+int synth_run ( synth *S, syn_result *buf, int len ) {
     int ret = 0;
     while (len) {
         ret++;
@@ -219,9 +219,12 @@ void debug_pool (FILE *fd, gen_pool *pool) {
 };
 
 void debug_synth (FILE *fd, synth *S) {
-    fprintf (fd, "synth: %0.3f+=%0.3f (rehash at %0.3f):\n", 
-            (double) S->time, (double) S->tick, 
-            (double) (S->next_rehash == TOMORROW ? 1E18: S->next_rehash) );
+    double rehash = S->next_rehash == TOMORROW 
+            ? INFINITY 
+            : (double) S->next_rehash;
+    fprintf (fd, "synth: %0.3fHz at %0.3f=%0.3fs, rehash at %0.3f=%0.3fs:\n", 
+            (double) S->hertz, (double) S->time, (double) S->time / S->hertz, 
+            rehash, rehash / S->hertz );
     debug_pool (fd, &( S->active ));
     debug_pool (fd, &( S->queue ));
 };

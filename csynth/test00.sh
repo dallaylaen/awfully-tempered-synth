@@ -11,6 +11,12 @@ cmd () {
     return $RET
 }
 
+if [ "x$1" = "x--show" ]; then
+    cmd
+    RET=$?
+    exit $RET
+fi
+
 if [ "x$1" = "x--reset" ]; then
     echo "RESETTING THE TEST"
     cmd >"$EXPECTED.new"

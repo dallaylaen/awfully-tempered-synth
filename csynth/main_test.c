@@ -3,21 +3,24 @@
 
 #include "simple_synth.h"
 
-#define POINTS 180
+#define POINTS 150
 #define NOTES  3
 
-int main ( int argc, char *argv[]) {
+int main (void) {
     synth syn;
     int err;
-    double buf[POINTS+1];
+    syn_result buf[POINTS+1];
     double in_buf[NOTES * 4] = {
-        0.5, 1.5, 3, 1,
+        0.5, 1.5, 3, 0.9,
         1, 2, 12, 0.1,
-        2.5, 2.6, 100, 0.5
+        2.5, 2.6, 10, 0.5
     };
     int i;
 
-    err = synth_setup( &syn, 256, 60, 1 );
+    buf[POINTS] = 1000*1000*1000; 
+        /* This big value guards buf (so there's no overrun) */
+
+    err = synth_setup( &syn, 256, 50, 1E5 );
     if (err) {
         fprintf ( stderr, "Failed to initialize synth: %d", err);
         return 1;
@@ -40,11 +43,12 @@ int main ( int argc, char *argv[]) {
         };
     };
 
-    for (i = 0; i < POINTS; i++) {
-        printf("%0.3f ", buf[i]);
-        if (! ((i+1)%12) )
+    for (i = 0; i < POINTS+1; i++) {
+        printf("%6ld ", (long) buf[i]);
+        if (! ((i+1)%10) )
             printf("\n");
     };
+    printf("\n");
 
     return 0;
 };
