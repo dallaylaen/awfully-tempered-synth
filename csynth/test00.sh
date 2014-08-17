@@ -1,12 +1,34 @@
 #!/bin/sh
 
+EXPECTED="csynth/expected.out"
+BIN=csynth/synth_test
+
+cmd () {
+    gcc -Wall -Wextra -o "$BIN" \
+        csynth/simple_synth.c csynth/main_test.c -lm && "$BIN"
+    RET=$?
+    rm -f "$BIN"
+    return $RET
+}
+
+if [ "x$1" = "x--reset" ]; then
+    echo "RESETTING THE TEST"
+    cmd >"$EXPECTED.new"
+    RET=$?
+    if [ "$RET" = 0 ]; then
+        mv -f "$EXPECTED.new" "$EXPECTED"
+    else
+        echo "FAILED!!"
+    fi
+
+    exit $RET
+fi 
+
 echo 1..1
 
-gcc -Wall -Wextra -o csynth/synth_test csynth/simple_synth.c csynth/main_test.c -lm &&\
-    csynth/synth_test | diff -ur csynth/expected.out - 
+cmd | diff -ur csynth/expected.out - 
 
 RET=$?
-rm -f csynth/synth_test
 
 if [ "$RET" -eq 0 ]; then
     echo "ok 1"
