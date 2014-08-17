@@ -2,10 +2,17 @@ package Audio::Play;
 
 use Moo;
 use File::Temp qw(tempfile);
+use FindBin qw($Bin);
 
 use Audio::Play::Sound;
 
 has sounds => is => ro => default => sub { [] };
+
+sub raw_player {
+    my $self = shift;
+
+    return sprintf "%s/../csynth/raw_player -p -v %f", $Bin, 0.9/$self->max_volume;
+};
 
 sub add_sound {
     my ($self, %opt) = @_;
@@ -32,15 +39,21 @@ sub get_sounds {
 sub run {
     my $self = shift;
 
-    return unless $self->get_sounds;
+    my @snd = sort { $a->start <=> $b->start } @{ $self->sounds };
 
-    my (undef, $fname) = tempfile ( CLEANUP => 1, SUFFIX => ".wav" );
+    @snd = map { $_, $_->harmonic( 2=>-6, 3=>-12, 4=>-18, 5=>-24, 6=>-30) } @snd;
+    
+    my $pid = open ( my $fd, "|-", $self->raw_player );
+    die "Popen failed: $!" unless $pid;
 
-    system "sox", "-n", $fname, # channels => 1, 
-            $self->make_arg;
-    system "play", $fname;
-    unlink $fname;
-    # TODO handle result
+    foreach (@snd) {
+        printf $fd "%0.18f %0.18f %0.18f %0.18f\n", 
+            $_->start, $_->len, $_->pitch, $_->voltage;
+    };
+    close ($fd);
+
+    waitpid( $pid, 0 );
+    return $?;
 };
 
 sub make_arg {

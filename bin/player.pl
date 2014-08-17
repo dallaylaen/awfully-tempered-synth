@@ -15,9 +15,9 @@ while (<>) {
     $play->parse_line($_);
 };
 
-print Dumper ( [$play->engine->get_sounds] );
+# print Dumper ( [$play->engine->get_sounds] );
 
-print join " ", $play->engine->make_arg; 
+# print join " ", $play->engine->make_arg; 
 
 $play->engine->run;
 
