@@ -6,7 +6,16 @@
 #include "simple_synth.h"
 
 double value ( generator *gen, syn_time t ) {
-    return gen->vol * gen->wave( 2*M_PI*gen->pitch * ( t - gen->start ) );
+    double vol = gen->vol;
+
+    if (t < gen->fade_in) {
+        vol *= (double) (t - gen->start) / ( gen->fade_in - gen->start );
+    };
+    if (t > gen->fade_out) {
+        vol *= (double) (gen->stop - t)  / (gen->stop - gen->fade_out);
+    };
+
+    return vol * gen->wave( 2*M_PI*gen->pitch * (t - gen->start));
 };
 
 int pool_alloc ( gen_pool *pool, int size ) {
@@ -193,6 +202,8 @@ int synth_read ( synth *S, double *buf, int len ) {
         gen.stop  = gen.start + (syn_time) (buf[1] * S->hertz);
         gen.pitch = buf[2] / S->hertz;
         gen.vol   = buf[3] * S->vol;
+        gen.fade_in = gen.start + (syn_time) (FADE_IN_SEC * S->hertz);
+        gen.fade_out = gen.stop - (syn_time) (FADE_OUT_SEC * S->hertz);
 
         if (synth_add( S, &gen )) {
             ret = -ret;

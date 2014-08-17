@@ -12,6 +12,8 @@ typedef double syn_time;
 #define TOMORROW INFINITY
 #endif
 
+#define FADE_IN_SEC 0.01
+#define FADE_OUT_SEC 0.01
 
 typedef long syn_result;
 
@@ -20,7 +22,7 @@ typedef double waveform(double);
 typedef struct {
     void *next;
     waveform *wave;
-    syn_time start, stop;
+    syn_time start, fade_in, fade_out, stop;
     double pitch, vol;
 } generator;
 
