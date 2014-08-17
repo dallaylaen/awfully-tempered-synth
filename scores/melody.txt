@@ -1,0 +1,9 @@
+set base 31 speed 30 meter 1
+
+chord 0
+--
+--
+chord 6
+--
+--
+chord 0 

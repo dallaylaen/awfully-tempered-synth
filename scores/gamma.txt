@@ -1,0 +1,28 @@
+set base 19 meter 1 speed 60 key 440
+
+# 2^19: 0.00838895465770157: $VAR1 = {
+#         si '15/8' => 17,
+#         fa '4/3' => 8,
+#         la '5/3' => 14,
+#        mib '6/5' => 5,
+#        sol '3/2' => 11,
+#         re '9/8' => 3,
+#         mi '5/4' => 6
+#        };
+
+chord 0
+--
+chord 3
+--
+chord 6
+--
+chord 8
+--
+chord 11
+--
+chord 14
+--
+chord 17
+--
+chord 0 oct 1
+

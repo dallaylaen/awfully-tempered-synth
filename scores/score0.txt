@@ -1,0 +1,7 @@
+set base 19 meter 1
+
+chord 0 len 0.25
+--
+--
+--
+chord 11 len 0.25
