@@ -109,13 +109,15 @@ double pool_sync_time ( gen_pool *ends, gen_pool *starts ) {
     return val;
 };
 
-int synth_setup (synth *S, int size, double tick) {
+int synth_setup (synth *S, int size, double hertz, double vol) {
     if (pool_alloc( &(S->active), size ))
         return -1;
     if (pool_alloc( &(S->queue), 2*size))
         return -2;
 
-    S->tick = tick;
+    S->hertz = hertz;
+    S->vol  = vol;
+    S->tick = 1;
     S->time = 0;
     S->next_rehash = INFINITY;
     return 0;
@@ -138,6 +140,10 @@ int synth_add ( synth *S, generator *gen ) {
     return 0;
 };
 
+int synth_avail ( synth *S) {
+    return S->queue.size - S->queue.used;
+};
+
 int synth_tick (synth *S, double *result) {
     int done = 0;
 
@@ -153,6 +159,46 @@ int synth_tick (synth *S, double *result) {
     S->next_rehash = pool_sync_time( &(S->active), &(S->queue) );
 
     return done;
+};
+
+int synth_run ( synth *S, double *buf, int len ) {
+    int ret = 0;
+    while (len) {
+        ret++;
+        if (synth_tick( S, buf ))
+            break;
+        buf++;
+        len--;
+    };
+   
+    return ret; 
+};
+
+int synth_read ( synth *S, double *buf, int len ) {
+    generator gen;
+    int ret = 0;
+   
+    gen.wave = sin;
+    while (len >= 4) {
+        if (!synth_avail(S))
+            break;
+
+        gen.start = buf[0] * S->hertz;
+        gen.stop  = buf[1] * S->hertz;
+        gen.pitch = buf[2] / S->hertz;
+        gen.vol   = buf[3] * S->vol;
+
+        if (synth_add( S, &gen )) {
+            ret = -ret;
+            break;
+        };
+
+        len -= 4;
+        buf += 4;
+        ret++;
+    };
+
+    return ret;
 };
 
 void debug_generator (FILE *fd, generator *gen) {
