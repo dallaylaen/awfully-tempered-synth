@@ -1,0 +1,12 @@
+set base 19 key 440 meter 1 speed 60
+
+chord 0,6,11
+--
+chord 0,6,11 oct -1
+--
+chord 0,6,11 oct -2
+--
+chord 0,6,11 oct -3
+--
+chord 0,6,11 oct -4
+--

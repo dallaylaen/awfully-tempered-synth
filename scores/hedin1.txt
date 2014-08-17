@@ -52,6 +52,7 @@ chord -9,6 vol -3
 3: chord -8 len 1.5
 4: chord 0
 --
+chord 0,6,11 oct -2 vol -3 len 8
 --
 --
 

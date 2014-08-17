@@ -14,8 +14,8 @@ chord 0,6,11 len 4
 --
 chord 8,14,19 len 4 vol 2
 --
-chord 11,14,22 len 4 vol 4
+chord 11,17,22 len 4 vol 4
 --
-chord 0,5,11 len 4 vol 6
+chord 0,6,11 len 4 vol 6
 
 
