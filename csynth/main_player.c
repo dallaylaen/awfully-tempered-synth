@@ -24,6 +24,7 @@ int main (int argc, char **argv) {
     double size = 256;
     double hertz = 44100;
     int err = argc;
+    int eof = 0;
 
     char inbuf[INBUF];
     syn_result outbuf[OUTBUF];
@@ -44,16 +45,21 @@ int main (int argc, char **argv) {
     synth_setup( &syn, (int) size, hertz, 2*1000*1000*1000 * vol);
     debug_synth( stderr, &syn );
 
-    while (fgets (inbuf, INBUF, stdin) != NULL) {
-        err = synth_scanf( &syn, inbuf );
-        if (err) {
-            fprintf( stderr, "Wrong line (%d): %s\n", err, inbuf);
+    
+    do {
+        while (!eof && synth_avail( &syn ) ) {
+            if (fgets (inbuf, INBUF, stdin) == NULL) {
+                eof = 1;
+                break;
+            };
+            err = synth_scanf( &syn, inbuf );
+            if (err) {
+                fprintf( stderr, "Wrong line (%d): %s\n", err, inbuf);
+            };
         };
-    };
 
-    debug_synth( stderr, &syn );
+        debug_synth( stderr, &syn );
 
-    while (!synth_empty( &syn )) {
         err = synth_run( &syn, outbuf, OUTBUF );
         if (err < 0) {
             fprintf( stderr, "Synth fail.\n" );
@@ -62,7 +68,7 @@ int main (int argc, char **argv) {
 
         write( 1, outbuf, err*sizeof(syn_result) );
         debug_synth( stderr, &syn );
-    };
+    } while (!eof || !synth_empty( &syn )); /* end main loop */
 
     return 0;
 };

@@ -11,9 +11,9 @@ int main (void) {
     int err;
     syn_result buf[POINTS+1];
     double in_buf[NOTES * 4] = {
-        0.5, 1.5, 3, 0.9,
-        1, 2, 12, 0.1,
-        2.5, 2.6, 10, 0.5
+        0.5, 1, 3, 0.9,
+        1, 1, 12, 0.1,
+        2.5, 0.1, 10, 0.5
     };
     int i;
 

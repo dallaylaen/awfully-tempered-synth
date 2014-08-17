@@ -190,7 +190,7 @@ int synth_read ( synth *S, double *buf, int len ) {
             break;
 
         gen.start = (syn_time) (buf[0] * S->hertz);
-        gen.stop  = (syn_time) (buf[1] * S->hertz);
+        gen.stop  = gen.start + (syn_time) (buf[1] * S->hertz);
         gen.pitch = buf[2] / S->hertz;
         gen.vol   = buf[3] * S->vol;
 
@@ -214,10 +214,7 @@ int synth_scanf ( synth *S, const char *spec ) {
         return -1;
     };
 
-    if (buf[0] >= buf[1])
-        return -2;
-
-    return synth_read( S, buf, 4 ) == 1 ? 0 : -4;
+    return synth_read( S, buf, 4 ) == 1 ? 0 : -2;
 };
 
 void debug_generator (FILE *fd, generator *gen) {
