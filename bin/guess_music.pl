@@ -15,12 +15,14 @@ my %notes = (
     DO => 2,
 );
 
+my @todo = @ARGV;
+@todo = ( 5..1200 ) unless @todo;
  
 my $besterr = 1000;
-foreach my $i ( 5..1200 ) {
+foreach my $i ( @todo ) {
     my ($err, $notes) = find_all( 2**(1/$i), qw(1 9/8 6/5 5/4 4/3 3/2 5/3 15/8 2) );
     next if $err > 1.3 * $besterr;
-    next unless has_seconds($notes);
+#     next unless has_seconds($notes);
      
     $besterr = $err if $err < $besterr;
      
