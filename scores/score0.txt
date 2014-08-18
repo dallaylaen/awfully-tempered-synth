@@ -1,7 +1,7 @@
-set base 19 meter 1
+set base 19 meter 4
 
-chord 0 len 0.25
+chord 0
 --
 --
 --
-chord 11 len 0.25
+chord 11
