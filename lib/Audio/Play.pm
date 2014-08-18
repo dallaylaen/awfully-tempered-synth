@@ -8,16 +8,18 @@ use Audio::Play::Sound;
 
 has sounds => is => ro => default => sub { [] };
 
+my $csynth = "csynth";
+
 sub raw_player {
     my ($self, %opt) = @_;
 
     if (defined $opt{record}) {
         return sprintf "%s/%s -r 44100 -v %f | sox -t raw %s -r 44100 - '%s'",
-            $Bin, "../csynth/raw_player", 0.9/$self->max_volume,
+            $Bin, $csynth, 0.9/$self->max_volume,
             "-e signed -b 32 -r 44100 -c 1", $opt{record};
     };
 
-    return sprintf "%s/../csynth/raw_player -p -v %f", $Bin, 0.9/$self->max_volume;
+    return sprintf "%s/%s -p -v %f", $Bin, $csynth, 0.9/$self->max_volume;
 };
 
 sub add_sound {
