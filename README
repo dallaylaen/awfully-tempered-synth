@@ -1,0 +1,66 @@
+NAME 
+
+Awfully tempered synth - Synthesizer that plays music in N-equal temperation.
+
+USAGE
+
+make
+bin/player.pl <your_score.txt>
+
+NOTE: This is in pre-alfa stage now, dragons be here.
+
+WHAT IS THIS FOR 
+
+Ideally, the following conditions should be met:
+
+* It is possible to write down a melody in simple ascii-only text format.
+* It is possible to play such a melody via hardware or software synthesizer.
+* It is possible to port melodies to different temperations.
+* There is a mechanism for keeping melody fragments for later use.
+* Replaying of fragments allows for changing key, variations, tempo change etc.
+* It is possible to express details at finer level than just notes.
+
+SCORE FORMAT
+
+NOTE: Format is subject to change! 
+
+At least,
+
+* all data is in ASCII
+* " "  leading whitespace is ignored
+* "#"  lines starting with pound are ignored (comments)
+* lines MAY start with a keyword, those are only used for control
+* lines MAY start with time adjust spec (tact, subtact division)
+* lines MAY contain chords
+* a chord MAY contains list of notes and some optional parameters
+
+Currently:
+
+* No header or footer is required;
+* The only known keyword is "set". Its usage is like follows:
+
+    set key 440 base 12 tempo 60 meter 4
+
+    Tempo is number of tacts in 60 seconds.
+
+* "--" (double dash) means moving 1 tack forward in time
+* "<nnn>:" (number, esmicolon) means moving by nnn/meter tacts. 
+    Fractions are accepted, too.
+* A chord is written as 
+
+    chord <n>,<n>,<n> [ vol n len n oct n ]
+
+Here
+    ** n is number of minimal intervals from starting note
+    ** vol is volume adjustment in dB
+    ** len is length in tact/meter
+    ** oct shifts all notes by <n> octaves
+
+For instance,
+
+    chord 0,4,7 len 4
+
+Would play a whole A major chord with values given above.
+
+See examples.
+
