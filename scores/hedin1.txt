@@ -1,4 +1,4 @@
-set base 19 key 261.6 meter 4 speed 43
+set base 19 key 261.6 meter 4 tempo 43
 
 # cadence bass
 0: chord 0 len 4 oct -1 vol 3

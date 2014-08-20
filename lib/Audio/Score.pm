@@ -11,12 +11,12 @@ has cache => is => "rw", default => sub { {} };
 has key => is => "rw", default => sub { 440 }, 
         trigger => sub { shift->cache( {} ) };
 has meter => is => "rw", default => sub { 4 };
-has speed => is => "rw", default => sub { 60 };
+has tempo => is => "rw", default => sub { 60 };
 has vol => is => "rw", default => sub { 0 };
 
 sub tack {
     my $self = shift;
-    return 60 / $self->speed;
+    return 60 / $self->tempo;
 };
 sub tick {
     my $self = shift;
@@ -45,7 +45,7 @@ sub parse_line {
         return unless $1;
         my %opt = $1 =~ m/(\S+)/g;
 
-        foreach my $method( qw(base meter speed vol key) ) {
+        foreach my $method( qw(base meter tempo vol key) ) {
             my $arg = delete $opt{$method};
             defined $arg or next;
             $self->$method($arg);

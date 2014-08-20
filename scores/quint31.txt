@@ -1,4 +1,4 @@
-set base 31 key 440 meter 4 speed 30 vol -6
+set base 31 key 440 meter 4 tempo 30 vol -6
 0: chord 0,10,18 len 4 oct -3
 0: chord 0,10,18 len 4 oct -2
 0: chord 0,10,18 len 4 oct -1

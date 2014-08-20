@@ -1,4 +1,4 @@
-set base 19 meter 1 speed 6
+set base 19 meter 1 tempo 6
 
 chord 0,6,11
 # chord 14 vol -1
