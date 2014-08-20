@@ -7,7 +7,7 @@ my ($base, $tertia, $quint) = @ARGV;
 my $note = 0;
 my @plus = ( 0, $tertia, $quint, $tertia );
 
-print "set base $base key 440 meter 4 tempo 30 vol -6\n";
+print "set base $base tone 440 meter 4 tempo 30 vol -6\n";
 printf "0: chord %d,%d,%d len 4 oct -3\n", @plus[0,1,2];
 printf "0: chord %d,%d,%d len 4 oct -2\n", @plus[0,1,2];
 printf "0: chord %d,%d,%d len 4 oct -1\n", @plus[0,1,2];

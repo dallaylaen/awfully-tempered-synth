@@ -39,7 +39,7 @@ Currently:
 * No header or footer is required;
 * The only known keyword is "set". Its usage is like follows:
 
-    set key 440 base 12 tempo 60 meter 4
+    set tone 440 base 12 tempo 60 meter 4
 
     Tempo is number of tacts in 60 seconds.
 

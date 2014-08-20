@@ -8,7 +8,7 @@ has base => is => "rw";
 has engine => is => "rw", default => sub { Audio::Play->new };
 has cache => is => "rw", default => sub { {} };
 
-has key => is => "rw", default => sub { 440 }, 
+has tone => is => "rw", default => sub { 440 }, 
         trigger => sub { shift->cache( {} ) };
 has meter => is => "rw", default => sub { 4 };
 has tempo => is => "rw", default => sub { 60 };
@@ -45,7 +45,7 @@ sub parse_line {
         return unless $1;
         my %opt = $1 =~ m/(\S+)/g;
 
-        foreach my $method( qw(base meter tempo vol key) ) {
+        foreach my $method( qw(base meter tempo vol tone) ) {
             my $arg = delete $opt{$method};
             defined $arg or next;
             $self->$method($arg);
@@ -91,7 +91,7 @@ sub get_pitch {
 
     $oct and $note += $oct * $self->base;
 
-    return $self->cache->{$note} ||= $self->key * ( 2 ** ($note/$self->base) );
+    return $self->cache->{$note} ||= $self->tone * ( 2 ** ($note/$self->base) );
 };
 
 1;

@@ -1,4 +1,4 @@
-set base 19 key 440 meter 4 tempo 30 vol -6
+set base 19 tone 440 meter 4 tempo 30 vol -6
 0: chord 0,6,11 len 4 oct -3
 0: chord 0,6,11 len 4 oct -2
 0: chord 0,6,11 len 4 oct -1
