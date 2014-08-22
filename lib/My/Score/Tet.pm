@@ -47,6 +47,10 @@ my %notes = (
     si  => 15/8,
 );
 
+sub natural_scale {
+    return @notes{ qw(do re mi fa sol la si) };
+};
+
 sub interval {
     my ($self, $int) = @_;
 
@@ -134,6 +138,46 @@ sub dissonance {
         and $ratio = $1/$2;
     my $pitch = $self->pitch( $self->interval($ratio) );
     return 1200 * log ($pitch / $ratio) / log 2;
+};
+
+my @tuning_checks = (
+    [ "m3", "m2", "M2" ],
+    [ "M3", "M2", "10/9" ],
+    [ "P5", "M3", "m3" ],
+    [    2, "P5", "10/9", "m3" ],
+);
+
+sub check_intervals {
+    my $self = shift;
+
+    my @bad;
+    foreach my $sample( @tuning_checks ) {
+        my ($sum, @parts) = map { $self->interval($_) } @$sample;
+        $sum -= $_ for @parts;
+        $sum != 0 and push @bad,
+            "$sample->[0] != ".join " + ", @$sample[1..$#$sample];
+    };
+
+    return @bad;
+};
+
+our @main_intervals = qw(16/15 10/9 9/8 6/5 5/4 4/3 3/2 5/3 7/4 11/8 13/8);
+sub examine {
+    my $self = shift;
+
+    my %intervals = map { $_ => $self->interval($_) } @main_intervals;
+    my @bad = $self->check_intervals;
+    my %dissonance => map { $_ => $self->dissonance($_) } @main_intervals;
+    my $total_dissonance = $self->weighted_dissonance( map { $_=>1 } @main_intervals);
+    
+    return {
+        steps => $self->base,
+        intervals => \%intervals,
+        has_second => ($self->interval(10/9) == $self->interval(9/8) ? 1 : 0),
+        bad_intervals => (@bad ? \@bad : undef),
+        dissonance => \%dissonance,
+        total_dissonance => $total_dissonance,
+    };
 };
 
 1;
