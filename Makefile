@@ -1,5 +1,8 @@
-test: csynth
-	prove -Ilib t/
+test: csynth test_perl
+	echo OK
+
+test_perl:
+	prove -Ilib -r t/
 
 csynth: csynth_unit
 	gcc -Wall -Wextra -o bin/csynth csynth/simple_synth.c csynth/main_player.c -lm
