@@ -63,12 +63,13 @@ sub make_sound {
     my ($self, $note) = @_;
 
     # TODO note start/len will be nonlinear when smooth speedup is implemented
+    # TODO UGLY HACK number-as-note support should be elsehow
     return My::Score::Sound->new(
         start => $note->start * $self->tick_len + $self->start,
         len   => $note->len   * $self->tick_len,
         vol   => $self->vol + $note->vol,
         pitch => $self->tone  * 2**$note->oct * $self->tuning->pitch( 
-            $note->tone =~ /^\d+$/
+            $note->tone =~ /^-?\d+$/
                 ? $note->tone 
                 : $self->tuning->interval( $note->tone )),
     );
