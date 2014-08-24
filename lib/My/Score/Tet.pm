@@ -75,14 +75,17 @@ sub _interval {
     looks_like_number($int) 
         and return int ( ($self->base * (log $int) / log 2) + 0.5 );
 
+    if ($int =~ /^(.*)([b#])$/) {
+        return $self->_interval( $1 ) + $alter{$2} * $self->interval("A1");
+    };
+
     my $ratio = $interval2ratio{$int};
     return $self->_interval( $ratio )
         if $ratio;
 
-    if ($int =~ /^([A-G])([#b]?)$/) {
+    if ($int =~ /^([A-G])$/) {
         return - $self->interval( $note2ratio{A} )  
-            + $self->interval( $note2ratio{$1} )
-            + $alter{$2} * $self->interval("A1");
+            + $self->interval( $note2ratio{$1} );
     };
 
     # Now let's detect...
