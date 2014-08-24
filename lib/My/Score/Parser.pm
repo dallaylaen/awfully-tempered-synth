@@ -59,16 +59,51 @@ sub parse_line {
     $line =~ s/^--\s*// and $self->last_tune->advance_tack;
 
     # tick label
-    $line =~ s/^(\d(?:\.\d)?):\s*// 
+    $line =~ s/^(\d+(?:\.\d+)?):\s*// 
         and $self->last_tune->set_tick( $1 );
     
     return unless $line =~ /\S/;
 
     # fianlly! parse chords
     my %opt = ( $line =~ m,(\S+),g );
-    my @notes = split /,/, delete $opt{chord};
+    my $notes = delete $opt{chord};
 
-    $self->last_tune->add_chord(%opt, notes => \@notes);
+    $self->last_tune->add_notes( $self->parse_chord($notes, %opt) );
+};
+
+sub parse_chord {
+    my ($self, $str, %opt) = @_;
+
+    $opt{oct} //= 0;
+
+    my @notes;
+    my $root;
+    foreach (split /\s*[\s,]\s*/, $str) {
+        my ($add_mode, $oct, $tone, $abs_note) 
+            = /^([+=]?)(?:(-?\d+)?:)?(([A-G][b#]?)|.*)$/
+                or die "Bad note spec $_";
+
+        $abs_note and $add_mode 
+            and die "Cannot have +/= and note at once in $_";
+
+        $oct = $opt{oct} + ($oct || 0);
+        $add_mode ||= '';
+
+        my $setroot;
+        my $rel;
+        if ($add_mode eq '=' or $abs_note or !@notes) {
+            $setroot = 1;
+        } else {
+            $rel = $add_mode eq '+' ? $notes[-1] : $root;
+        };
+
+        my $note = My::Score::Note->new(
+            %opt, oct => $oct, tone => $tone, rel => $rel
+        );
+        push @notes, $note;
+        $root = $note if $setroot;
+    };
+    return @notes;
 };
 
 sub play_to_fd {

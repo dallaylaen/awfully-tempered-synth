@@ -59,8 +59,16 @@ sub add_chord {
     };
 };
 
+sub add_notes {
+    my ($self, @notes) = @_;
+    push @{ $self->notes }, map { $_->clone( start => $self->edge ); } 
+            @notes;
+};
+
 sub make_sound {
     my ($self, $note) = @_;
+
+    my $step = $self->tuning->translate_note($note);
 
     # TODO note start/len will be nonlinear when smooth speedup is implemented
     # TODO UGLY HACK number-as-note support should be elsehow
@@ -68,10 +76,7 @@ sub make_sound {
         start => $note->start * $self->tick_len + $self->start,
         len   => $note->len   * $self->tick_len,
         vol   => $self->vol + $note->vol,
-        pitch => $self->tone  * 2**$note->oct * $self->tuning->pitch( 
-            $note->tone =~ /^-?\d+$/
-                ? $note->tone 
-                : $self->tuning->interval( $note->tone )),
+        pitch => $self->tone  * 2**$note->oct * $self->tuning->pitch( $step ),
     );
 };
 

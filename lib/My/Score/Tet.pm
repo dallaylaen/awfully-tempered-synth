@@ -20,8 +20,17 @@ sub pitch {
     return $self->pitch_cache->{$n} //= 2**($n/$self->base);
 };
 
+sub translate_note {
+    my ($self, $note) = @_;
+
+    my $step = $note->tone =~ /^(-?\d+)$/ ? $1 : $self->interval( $note->tone );
+    $note->rel and $step += $self->translate_note($note->rel);
+    return $step;
+};
+
 my %interval2ratio = (
-    P1 => 1,
+    P1 => "1/1",
+    A1 => "25/24",
     m2 => "16/15",
     M2 => "9/8",
     m3 => "6/5",
@@ -33,23 +42,24 @@ my %interval2ratio = (
     P7 => "7/4",
     m7 => "16/9",
     M7 => "15/8",
-    P8 => 2,
-
+    P8 => "2/1",
 );
 
-my %notes = (
-    do  => 1,
-    re  => 9/8,
-    mi  => 5/4,
-    fa  => 4/3,
-    sol => 3/2,
-    la  => 5/3,
-    si  => 15/8,
+my %note2ratio = (
+    C => "1/1",
+    D => "8/9",
+    E => "5/4",
+    F => "4/3",
+    G => "3/2",
+    A => "5/3",
+    B => "15/8",
 );
 
-sub natural_scale {
-    return @notes{ qw(do re mi fa sol la si) };
-};
+my %alter = (
+    ''  => 0,
+    b   => -1,
+    '#' => +1,
+);
 
 sub interval {
     my ($self, $int) = @_;
@@ -61,7 +71,7 @@ sub interval {
 sub _interval {
     my ($self, $int) = @_;
 
-    $int =~ /(\d+)\/(\d+)/ and $int = $1/$2;
+    $int =~ /^(\d+)\/(\d+)$/ and $int = $1/$2;
     looks_like_number($int) 
         and return int ( ($self->base * (log $int) / log 2) + 0.5 );
 
@@ -69,16 +79,24 @@ sub _interval {
     return $self->_interval( $ratio )
         if $ratio;
 
+    if ($int =~ /^([A-G])([#b]?)$/) {
+        return - $self->interval( $note2ratio{A} )  
+            + $self->interval( $note2ratio{$1} )
+            + $alter{$2} * $self->interval("A1");
+    };
+
     # Now let's detect...
-    $int =~ /([dmPMA])([1-9]\d*)/
-        or die "Wrong interval format";
+    $int =~ /^([dmPMA])([1-9]\d*)$/
+        or die "Wrong interval format: $int";
     my ($type, $n) = ($1, $2);
 
     # handle flattened & sharpened intrevals
     $type eq 'd' 
-        and return ($self->_interval("m$n") || $self->_interval("P$n"))-1;
+        and return ($self->_interval("m$n") || $self->_interval("P$n"))
+                -$self->interval("A1");
     $type eq 'A' 
-        and return ($self->_interval("M$n") || $self->_interval("P$n"))+1;
+        and return ($self->_interval("M$n") || $self->_interval("P$n"))
+                +$self->interval("A1");
 
     # autodetect octave+
     if ($n > 8) {
@@ -141,6 +159,7 @@ sub dissonance {
 };
 
 my @tuning_checks = (
+    [ "10/9", "m2", "A1" ],
     [ "m3", "m2", "M2" ],
     [ "M3", "M2", "10/9" ],
     [ "P5", "M3", "m3" ],
