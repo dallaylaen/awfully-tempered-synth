@@ -48,13 +48,23 @@ Currently:
     Fractions are accepted, too.
 * A chord is written as 
 
-    chord <n>,<n>,<n> [ vol n len n oct n ]
+    chord <N>,<N>,<N> [ vol n len n oct n ]
 
 Here
-    ** n is number of minimal intervals from starting note
     ** vol is volume adjustment in dB
     ** len is length in tact/meter
     ** oct shifts all notes by <n> octaves
+    ** N is note in one of the forms:
+        *** <n> - number of steps from root note in chord
+        *** [A-F][b#]? - usual note with alteration sign, resets root to itself
+        *** [dmPMA]<n> - diminished/minor/perfect/major/augmented <n>th
+            from root note
+        *** <n>/<m> - natural interval n/m approximated by current tuning
+        Additionally,
+        *** Leading = - count interval from from A and become root note
+            This holds by default for the first note
+        *** Leading + - count from last note, not root note
+        *** Leading -?<n>: - move n octaves up/down
 
 For instance,
 
