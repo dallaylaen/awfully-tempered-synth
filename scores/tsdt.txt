@@ -12,9 +12,9 @@ set base 19 meter 4 tempo 60 tone 440
 
 chord 0,6,11 len 4
 --
-chord 8,14,19 len 4 vol 2
+chord 8,6,11 len 4 vol 2
 --
-chord 11,17,22 len 4 vol 4
+chord 11,6,11 len 4 vol 4
 --
 chord 0,6,11 len 4 vol 6
 

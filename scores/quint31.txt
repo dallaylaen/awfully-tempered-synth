@@ -1,197 +1,197 @@
 set base 31 tone 440 meter 4 tempo 30 vol -6
-0: chord 0,10,18 len 4 oct -3
-0: chord 0,10,18 len 4 oct -2
-0: chord 0,10,18 len 4 oct -1
---0: chord 0,10,18 len 5 vol -12
+0: chord =0,=10,=18 len 4 oct -3
+0: chord =0,=10,=18 len 4 oct -2
+0: chord =0,=10,=18 len 4 oct -1
+--0: chord =0,=10,=18 len 5 vol -12
 0: chord 0
 1: chord 10
 2: chord 18
 3: chord 10
 --
-0: chord 13,23,31 len 5 vol -12
+0: chord =13,=23,=31 len 5 vol -12
 0: chord 13
 1: chord 23
 2: chord 31
 3: chord 23
 --
-0: chord 26,36,44 len 5 vol -12
+0: chord =26,=36,=44 len 5 vol -12
 0: chord 26
 1: chord 36
 2: chord 44
 3: chord 36
 --
-0: chord 8,18,26 len 5 vol -12
+0: chord =8,=18,=26 len 5 vol -12
 0: chord 8
 1: chord 18
 2: chord 26
 3: chord 18
 --
-0: chord 21,31,39 len 5 vol -12
+0: chord =21,=31,=39 len 5 vol -12
 0: chord 21
 1: chord 31
 2: chord 39
 3: chord 31
 --
-0: chord 3,13,21 len 5 vol -12
+0: chord =3,=13,=21 len 5 vol -12
 0: chord 3
 1: chord 13
 2: chord 21
 3: chord 13
 --
-0: chord 16,26,34 len 5 vol -12
+0: chord =16,=26,=34 len 5 vol -12
 0: chord 16
 1: chord 26
 2: chord 34
 3: chord 26
 --
-0: chord 29,39,47 len 5 vol -12
+0: chord =29,=39,=47 len 5 vol -12
 0: chord 29
 1: chord 39
 2: chord 47
 3: chord 39
 --
-0: chord 11,21,29 len 5 vol -12
+0: chord =11,=21,=29 len 5 vol -12
 0: chord 11
 1: chord 21
 2: chord 29
 3: chord 21
 --
-0: chord 24,34,42 len 5 vol -12
+0: chord =24,=34,=42 len 5 vol -12
 0: chord 24
 1: chord 34
 2: chord 42
 3: chord 34
 --
-0: chord 6,16,24 len 5 vol -12
+0: chord =6,=16,=24 len 5 vol -12
 0: chord 6
 1: chord 16
 2: chord 24
 3: chord 16
 --
-0: chord 19,29,37 len 5 vol -12
+0: chord =19,=29,=37 len 5 vol -12
 0: chord 19
 1: chord 29
 2: chord 37
 3: chord 29
 --
-0: chord 1,11,19 len 5 vol -12
+0: chord =1,=11,=19 len 5 vol -12
 0: chord 1
 1: chord 11
 2: chord 19
 3: chord 11
 --
-0: chord 14,24,32 len 5 vol -12
+0: chord =14,=24,=32 len 5 vol -12
 0: chord 14
 1: chord 24
 2: chord 32
 3: chord 24
 --
-0: chord 27,37,45 len 5 vol -12
+0: chord =27,=37,=45 len 5 vol -12
 0: chord 27
 1: chord 37
 2: chord 45
 3: chord 37
 --
-0: chord 9,19,27 len 5 vol -12
+0: chord =9,=19,=27 len 5 vol -12
 0: chord 9
 1: chord 19
 2: chord 27
 3: chord 19
 --
-0: chord 22,32,40 len 5 vol -12
+0: chord =22,=32,=40 len 5 vol -12
 0: chord 22
 1: chord 32
 2: chord 40
 3: chord 32
 --
-0: chord 4,14,22 len 5 vol -12
+0: chord =4,=14,=22 len 5 vol -12
 0: chord 4
 1: chord 14
 2: chord 22
 3: chord 14
 --
-0: chord 17,27,35 len 5 vol -12
+0: chord =17,=27,=35 len 5 vol -12
 0: chord 17
 1: chord 27
 2: chord 35
 3: chord 27
 --
-0: chord 30,40,48 len 5 vol -12
+0: chord =30,=40,=48 len 5 vol -12
 0: chord 30
 1: chord 40
 2: chord 48
 3: chord 40
 --
-0: chord 12,22,30 len 5 vol -12
+0: chord =12,=22,=30 len 5 vol -12
 0: chord 12
 1: chord 22
 2: chord 30
 3: chord 22
 --
-0: chord 25,35,43 len 5 vol -12
+0: chord =25,=35,=43 len 5 vol -12
 0: chord 25
 1: chord 35
 2: chord 43
 3: chord 35
 --
-0: chord 7,17,25 len 5 vol -12
+0: chord =7,=17,=25 len 5 vol -12
 0: chord 7
 1: chord 17
 2: chord 25
 3: chord 17
 --
-0: chord 20,30,38 len 5 vol -12
+0: chord =20,=30,=38 len 5 vol -12
 0: chord 20
 1: chord 30
 2: chord 38
 3: chord 30
 --
-0: chord 2,12,20 len 5 vol -12
+0: chord =2,=12,=20 len 5 vol -12
 0: chord 2
 1: chord 12
 2: chord 20
 3: chord 12
 --
-0: chord 15,25,33 len 5 vol -12
+0: chord =15,=25,=33 len 5 vol -12
 0: chord 15
 1: chord 25
 2: chord 33
 3: chord 25
 --
-0: chord 28,38,46 len 5 vol -12
+0: chord =28,=38,=46 len 5 vol -12
 0: chord 28
 1: chord 38
 2: chord 46
 3: chord 38
 --
-0: chord 10,20,28 len 5 vol -12
+0: chord =10,=20,=28 len 5 vol -12
 0: chord 10
 1: chord 20
 2: chord 28
 3: chord 20
 --
-0: chord 23,33,41 len 5 vol -12
+0: chord =23,=33,=41 len 5 vol -12
 0: chord 23
 1: chord 33
 2: chord 41
 3: chord 33
 --
-0: chord 5,15,23 len 5 vol -12
+0: chord =5,=15,=23 len 5 vol -12
 0: chord 5
 1: chord 15
 2: chord 23
 3: chord 15
 --
-0: chord 18,28,36 len 5 vol -12
+0: chord =18,=28,=36 len 5 vol -12
 0: chord 18
 1: chord 28
 2: chord 36
 3: chord 28
 --
-0: chord 0,10,18 len 5 vol -12
+0: chord =0,=10,=18 len 5 vol -12
 0: chord 0
 1: chord 10
 2: chord 18
 3: chord 10
 --
-0: chord 13,23,31 len 4 vol -6 oct -1
+0: chord =13,=23,=31 len 4 vol -6 oct -1
