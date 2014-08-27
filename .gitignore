@@ -1,2 +1,4 @@
 bin/csynth
+bin/csynth_test
 *.mp3
+cover_db
