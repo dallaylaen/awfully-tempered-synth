@@ -49,14 +49,28 @@ test_snippet([
         "1 1 660+-10 0+-999",
     ]);
 
+test_snippet([
+        "set meter 1 tempo 60",
+        "seq 0,1,2,3,4,5,6,7",
+    ],[
+        "0 1 440     0+-999",
+        "1 1 466+-10 0+-999",
+        "2 1 495+-10 0+-999",
+        "3 1 520+-10 0+-999",
+        "4 1 550+-10 0+-999",
+        "5 1 590+-10 0+-999",
+        "6 1 620+-10 0+-999",
+        "7 1 660+-10 0+-999",
+    ]);
 
 done_testing;
 
 my $snip;
 sub test_snippet {
-    my ($input, $likes) = @_;
+    my ($input, $likes, $msg) = @_;
 
     $snip++;
+
     my $play = My::Score::Parser->new( instrument => $bare );
     my $n;
     my @err;
