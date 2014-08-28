@@ -39,12 +39,15 @@ Currently:
 * No header or footer is required;
 * The only known keyword is "set". Its usage is like follows:
 
-    set tone 440 base 12 tempo 60 meter 4
+    set tone 440 tuning 12 tempo 60 meter 4
 
-    Tempo is number of tacts in 60 seconds.
+    ** Tempo is number of tacts in 60 seconds.
+    ** Meter is number of parts within a tact.
+    ** Tone is A note pitch in Hertz.
+    ** Tuning is number of steps in the tuning system.
 
 * "--" (double dash) means moving 1 tack forward in time
-* "<nnn>:" (number, esmicolon) means moving by nnn/meter tacts. 
+* "<nnn>:" (number, colon) means moving by nnn/meter tacts. 
     Fractions are accepted, too.
 * A chord is written as 
 

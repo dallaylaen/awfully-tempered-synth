@@ -25,6 +25,8 @@ sub translate_note {
 
     my $step = $note->tone =~ /^(-?\d+)$/ ? $1 : $self->interval( $note->tone );
     $note->rel and $step += $self->translate_note($note->rel);
+    $note->oct and $step += $note->oct*$self->base;
+
     return $step;
 };
 
@@ -87,6 +89,8 @@ sub _interval {
         return - $self->interval( $note2ratio{A} )  
             + $self->interval( $note2ratio{$1} );
     };
+
+    $int =~ /^-(.*)$/ and return -$self->_interval($1);
 
     # Now let's detect...
     $int =~ /^([dmPMA])([1-9]\d*)$/

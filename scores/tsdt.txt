@@ -1,4 +1,4 @@
-set base 19 meter 4 tempo 60 tone 440
+set tuning 19 meter 4 tempo 60 tone 440
 
 # 2^19: 0.00838895465770157: $VAR1 = {
 #         si '15/8' => 17,

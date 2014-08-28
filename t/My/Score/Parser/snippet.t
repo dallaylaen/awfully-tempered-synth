@@ -17,12 +17,12 @@ test_snippet(
 );
 
 test_snippet(
-    ["set base 1200", "chord A,M3,P5"],
+    ["set tuning 1200", "chord A,M3,P5"],
     ["0 0.25 440 0+-999","0 0.25 550+-10 0+-999","0 0.25 660+-10 0+-999", ],
 );
 
 test_snippet([
-        "set base 12 meter 1 tempo 60",
+        "set tuning 12 meter 1 tempo 60",
         "--",
         "chord 0,12",
     ],[
@@ -30,7 +30,7 @@ test_snippet([
         "1 1 880 0+-999",
     ]);
 test_snippet([
-        "set base 12 meter 1 tempo 60",
+        "set tuning 12 meter 1 tempo 60",
         "--",
         "chord 0,4,7",
     ],[
@@ -40,7 +40,7 @@ test_snippet([
     ]);
 
 test_snippet([
-        "set base 19 meter 1 tempo 60",
+        "set tuning 19 meter 1 tempo 60",
         "--",
         "chord 0,6,11",
     ],[

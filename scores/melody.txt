@@ -1,4 +1,4 @@
-set base 31 tempo 30 meter 1
+set tuning 31 tempo 30 meter 1
 
 chord 0
 --

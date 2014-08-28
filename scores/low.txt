@@ -1,4 +1,4 @@
-set base 19 tone 440 meter 1 tempo 60
+set tuning 19 tone 440 meter 1 tempo 60
 
 chord 0,6,11
 --

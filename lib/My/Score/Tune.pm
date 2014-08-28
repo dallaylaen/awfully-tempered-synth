@@ -11,13 +11,11 @@ use My::Score::Tet;
 has notes  => is => "rw", default => sub { [] };
 
 # TODO tuning/base is done via ass, REWRITE
-has tuning => is => "rw", lazy => 1, default => sub {
-    My::Score::Tet->tet($_[0]->base);
-};
-has base   => is => "rw", default => sub { 12 }, trigger => sub {
-    my ($self, $base) = @_;
-    $self->tuning( My::Score::Tet->tet($base) );
-};
+has tuning => is => "rw", default => sub { My::Score::Tet->tet(12) }, 
+    coerce => sub {
+        my $t = shift;
+        return ref $t ? $t : My::Score::Tet->tet($t);
+    };
 
 has vol    => is => "rw", default => sub{ 0 };
 has start  => is => "rw", default => sub{ 0 };
@@ -60,9 +58,15 @@ sub add_chord {
 };
 
 sub add_notes {
-    my ($self, @notes) = @_;
-    push @{ $self->notes }, map { $_->clone( start => $self->edge ); } 
-            @notes;
+    my ($self, %opt) = @_;
+
+    my $notes = delete $opt{notes};
+    my $start = $self->edge;
+
+    foreach (@$notes) {
+        push @{ $self->notes }, $_->clone( start => $start );
+        $start += $_->len if $opt{seq};
+    };
 };
 
 sub make_sound {
@@ -71,12 +75,11 @@ sub make_sound {
     my $step = $self->tuning->translate_note($note);
 
     # TODO note start/len will be nonlinear when smooth speedup is implemented
-    # TODO UGLY HACK number-as-note support should be elsehow
     return My::Score::Sound->new(
         start => $note->start * $self->tick_len + $self->start,
         len   => $note->len   * $self->tick_len,
         vol   => $self->vol + $note->vol,
-        pitch => $self->tone  * 2**$note->oct * $self->tuning->pitch( $step ),
+        pitch => $self->tone  * $self->tuning->pitch( $step ),
     );
 };
 
@@ -94,6 +97,15 @@ sub clone {
     $opt{tack_edge} //= $self->tack_edge - $self->edge; # negative
 
     return (ref $self)->new( %$self, %opt, notes => [] );
+};
+
+sub dump {
+    my ($self, $prefix) = @_;
+    $prefix //= '';
+
+    return $prefix."DUMP TUNE("
+        .(join " ", map { "$_=".$self->$_ } qw(start edge tack_edge base meter tempo)).")\n"
+        .(join "\n", map { "$prefix\t".$_->dump } @{ $self->notes })."\n";
 };
 
 1;

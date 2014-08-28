@@ -1,4 +1,4 @@
-set base 19 meter 4
+set tuning 19 meter 4
 
 chord 0
 --

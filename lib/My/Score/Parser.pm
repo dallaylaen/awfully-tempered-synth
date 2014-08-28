@@ -66,9 +66,14 @@ sub parse_line {
 
     # fianlly! parse chords
     my %opt = ( $line =~ m,(\S+),g );
-    my $notes = delete $opt{chord};
+    my $seq = defined $opt{seq};
+    my $notes = delete $opt{seq} // delete $opt{chord};
+    defined $notes or die "No notes found in chord";
 
-    $self->last_tune->add_notes( $self->parse_chord($notes, %opt) );
+    $self->last_tune->add_notes( 
+        notes => $self->parse_chord($notes, %opt),
+        seq => $seq,
+    );
 };
 
 sub parse_chord {
@@ -103,13 +108,22 @@ sub parse_chord {
         push @notes, $note;
         $root = $note if $setroot;
     };
-    return @notes;
+    return \@notes;
 };
 
 sub play_to_fd {
     my ($self, $fd) = @_;
 
     $self->instrument->play_to_fd( $fd, @{ $self->tune_list } );
+};
+
+sub dump {
+    my ($self, $prefix) = @_;
+    $prefix //= '';
+
+    return "${prefix}DUMP MUSIC\n"
+        .(join "\n", map { "$prefix\t".$_->dump } @{ $self->tune_list })
+        ."${prefix}END DUMP MUSIC\n";
 };
 
 1;
